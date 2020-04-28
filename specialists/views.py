@@ -18,6 +18,7 @@ def estimate(request, spec_id):
     main_value = 0
     if estims:
         main_value = spec.qualif(my_dict.getRealDict(), spec.setRanks(), spec.maxQualif(spec.setRanks()))
+        main_value = round(main_value, 3)
     return render(request, 'estimate.html', {'spec': spec, 'estims': estims, 'main_value': main_value})
 
 

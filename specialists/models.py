@@ -20,7 +20,7 @@ class Specialist(models.Model):
         return sum / maxQ
 
     def setMarks(self):
-        file = open('C:/Users/salae/PycharmProjects/monitoring/specialists/estimations.txt', 'r')
+        file = open('templates/estimations.txt', 'r')
         marks = file.read()
         file.close()
         nums = [0, 0.25, 0.5, 0.75, 1]
@@ -31,7 +31,7 @@ class Specialist(models.Model):
         return estims
 
     def setRanks(self):
-        file = open('C:/Users/salae/PycharmProjects/monitoring/specialists/coefficients.txt', 'r')
+        file = open('templates/coefficients.txt', 'r')
         file_text = file.read()
         file.close()
         ranks = {}
