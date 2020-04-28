@@ -1,7 +1,7 @@
 Visual Studio
 Eclipse
 PyCharm
-Член
+Spyder
 Oracle SQL
 Microsoft SQL Server
 Python
