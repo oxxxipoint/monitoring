@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="intro">
+        <div class="info__change">
+            {% block name %} {% endblock %}
+            <form method="POST" class="spec-form">{% csrf_token %}
+                <div class="inp__field"> {{ form.as_p }} </div>
+                <button type="submit" class="save_btn">Сохранить</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

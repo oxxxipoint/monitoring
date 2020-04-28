@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script|Montserrat:400,700&amp;subset=cyrillic-ext"
+          rel="stylesheet">
+    <link rel="shortcut icon" href="https://atom.io/favicon.ico">
+    <title>{% block title %}Monitoring{% endblock %} </title>
+</head>
+<body>
+
+{% block navigation %}
+    <header class="header">
+        <div class="container">
+            <div class="header_inner">
+                <a class="header__logo" href="http://127.0.0.1:8000/">Monitoring</a>
+                <nav class="nav">
+                    <a class="nav__link" href="http://127.0.0.1:8000/">К списку</a>
+                    <a class="nav__link" href="#">О веб-приложении</a>
+                    <a class="nav__link" href="{% url 'specialists:spec_new' %}">Добавление
+                        сотрудника</a>
+                    <a class="nav__link" href="http://127.0.0.1:8000/admin/">Управление</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+{% block content %}{% endblock %}
+
+</body>
+</html>
