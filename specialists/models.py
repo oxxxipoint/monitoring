@@ -20,7 +20,7 @@ class Specialist(models.Model):
         return sum / maxQ
 
     def setMarks(self):
-        file = open('specialists/static/criteria/estimations.txt', 'r')
+        file = open('specialists/static/criteria/dick.txt', 'r')
         marks = file.read()
         file.close()
         nums = [0, 0.25, 0.5, 0.75, 1]
