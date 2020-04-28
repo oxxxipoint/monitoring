@@ -1,7 +1,7 @@
 Visual Studio - 0.5
 Eclipse - 0.4
 PyCharm - 0.5
-Член - 0.6
+Spyder - 0.6
 Oracle SQL - 0.5
 Microsoft SQL Server - 0.6
 Python - 1.0
