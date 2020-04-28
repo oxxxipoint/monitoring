@@ -1,0 +1,12 @@
+Visual Studio - 0.5
+Eclipse - 0.4
+PyCharm - 0.5
+Spyder - 0.6
+Oracle SQL - 0.5
+Microsoft SQL Server - 0.6
+Python - 1.0
+C# - 0.9
+Java - 0.9
+Perl - 0.8
+Java Script - 0.7
+C++ - 0.6

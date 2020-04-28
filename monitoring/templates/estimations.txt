@@ -1,0 +1,12 @@
+Visual Studio
+Eclipse
+PyCharm
+Spyder
+Oracle SQL
+Microsoft SQL Server
+Python
+C#
+Java
+Perl
+Java Script
+C++
