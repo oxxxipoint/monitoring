@@ -21,7 +21,7 @@ class Specialist(models.Model):
         return sum / maxQ
 
     def setMarks(self):
-        dir = os.path.abspath(os.curdir)
+        dir = '/home/oxxxipoint/oxxxipoint.pythonanywhere.com/templates/estimations.txt'
         file = open(dir, 'r')
         marks = file.read()
         file.close()
@@ -33,8 +33,8 @@ class Specialist(models.Model):
         return estims
 
     def setRanks(self):
-        dir = os.path.abspath(os.curdir)
-        file = open('specialists/static/criteria/coefficients.txt', 'r')
+        dir = '/home/oxxxipoint/oxxxipoint.pythonanywhere.com/templates/coefficients.txt'
+        file = open(dir, 'r')
         file_text = file.read()
         file.close()
         ranks = {}
