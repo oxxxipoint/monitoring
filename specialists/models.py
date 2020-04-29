@@ -1,4 +1,5 @@
 import random
+import os
 
 from django.db import models
 
@@ -21,7 +22,8 @@ class Specialist(models.Model):
         return sum / maxQ
 
     def setMarks(self):
-        file = open('specialists/static/criteria/estimations.txt', 'r')
+        dir = '/home/oxxxipoint/oxxxipoint.pythonanywhere.com/templates/estimations.txt'
+        file = open(dir, 'r')
         marks = file.read()
         file.close()
         nums = [0, 0.25, 0.5, 0.75, 1]
@@ -32,7 +34,8 @@ class Specialist(models.Model):
         return estims
 
     def setRanks(self):
-        file = open('specialists/static/criteria/coefficients.txt', 'r')
+        dir = '/home/oxxxipoint/oxxxipoint.pythonanywhere.com/templates/coefficients.txt'
+        file = open(dir, 'r')
         file_text = file.read()
         file.close()
         ranks = {}
