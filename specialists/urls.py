@@ -5,6 +5,7 @@ from . import views
 app_name = 'specialists'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('table/', views.table, name='table'),
     path('new/', views.spec_new, name='spec_new'),
     path('<int:spec_id>/', views.estimate, name='estimate'),
     path('<int:spec_id>/edit/', views.spec_edit, name='spec_edit'),

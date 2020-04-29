@@ -8,6 +8,7 @@ class Specialist(models.Model):
     surname = models.CharField('Фамилия', max_length=50)
     patronymic = models.CharField('Отчество', max_length=50)
     birth = models.DateField('Дата рождения')
+    main_estim = models.DecimalField(max_digits=4, decimal_places=3, default=0)
 
     def __str__(self):
         return self.surname + ' ' + self.name + ' ' + self.patronymic

@@ -7,7 +7,7 @@ from specialists.models import Specialist, Dict, DictObj
 
 
 def index(request):
-    all_spec = Specialist.objects.order_by('surname')
+    all_spec = Specialist.objects.order_by('main_estim')
     return render(request, 'list.html', {'all_spec': all_spec})
 
 
@@ -19,6 +19,8 @@ def estimate(request, spec_id):
     if estims:
         main_value = spec.qualif(my_dict.getRealDict(), spec.setRanks(), spec.maxQualif(spec.setRanks()))
         main_value = round(main_value, 3)
+        spec.main_estim = main_value
+        spec.save()
     return render(request, 'estimate.html', {'spec': spec, 'estims': estims, 'main_value': main_value})
 
 
@@ -68,3 +70,8 @@ def spec_delete(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
     spec.delete()
     return HttpResponseRedirect("/")
+
+
+def table(request):
+    all_spec = Specialist.objects.order_by('surname')
+    return render(request, 'table.html', {'all_spec': all_spec})

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ spec.getName }}{% endblock %}
+
+{% block content %}
+    <div class="intro">
+        <table class="spec__table">
+            {% for spec in all_spec %}
+                <tr>
+                    <td>
+                        {{ spec }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}
