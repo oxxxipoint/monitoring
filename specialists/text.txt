@@ -1,71 +1,18 @@
-background: url("../images/back.jpg") center no-repeat;
-    background-size: cover;
+def estim_edit(request, spec_id):
+    spec = get_object_or_404(Specialist, id=spec_id)
+    my_dict = Dict(id=spec.id, spec=spec, dictName=("Оценки " + spec.surname))
+    my_dict.save()
 
-    .info__change {
-    text-align: center;
+    if my_dict.__len__() == 12:
+        my_dict.clear()
+    estims = spec.setMarks()
+    for est in estims:
+        dict_obj = DictObj(container=my_dict, key=est, value=estims[est])
+        dict_obj.save()
+    return redirect('specialists:estimate', spec.id)
 
-    position: relative;
-    font-weight: bold;
-    left: 100px;
-    width: 33%;
-    height: 50%;
-
-    display: inline-block;
-    border-radius: 50px;
-    border: 2px solid black;
-
-    color: white;
-
-}
-
-class Dictionary(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-    @staticmethod
-    def getDict(name):
-        df = Dictionary.objects.select_related().get(name=name)
-
-        return df
-
-    def __getitem__(self, key):
-        return self.keyvaluepair_set.get(key=key).value
-
-    def __setitem__(self, key, value):
-        try:
-            kvp = self.keyvaluepair_set.get(key=key)
-
-        except KeyValuePair.DoesNotExist:
-            KeyValuePair.objects.create(container=self, key=key, value=value)
-
-        else:
-            kvp.value = value
-            kvp.save()
-
-    def __delitem__(self, key):
-        try:
-            kvp = self.keyvaluepair_set.get(key=key)
-
-        except KeyValuePair.DoesNotExist:
-            raise KeyError
-
-        else:
-            kvp.delete()
-
-    class Meta:
-        verbose_name = "Словарь"
-        verbose_name_plural = "Словари"
-
-        class KeyValuePair(models.Model):
-    container = models.ForeignKey(Dictionary, db_index=True, on_delete=models.CASCADE)
-    key = models.CharField(max_length=240, db_index=True)
-    value = models.CharField(max_length=240, db_index=True)
-
-    def __str__(self):
-        return "Оценка " + self.key
-
-    class Meta:
-        verbose_name = "Оценка"
-        verbose_name_plural = "Оценки"
+    if estims:
+        main_value = spec.qualif(my_dict.getRealDict(), Criteria.objects.all(), spec.maxQualif(Criteria.objects.all()))
+        main_value = round(main_value, 3)
+        spec.main_estim = main_value
+        spec.save()

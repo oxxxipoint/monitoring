@@ -18,7 +18,7 @@
                 <a class="header__logo" href="{% url 'specialists:index' %}">Monitoring</a>
                 <nav class="nav">
                     <a class="nav__link" href="{% url 'specialists:index' %}">К списку</a>
-                    <a class="nav__link" href="#">О веб-приложении</a>
+                    <a class="nav__link" href="{% url 'specialists:show_criteria' %}">Изменить критерии</a>
                     <a class="nav__link" href="{% url 'specialists:spec_new' %}">Добавление сотрудника</a>
                     <a class="nav__link" href="{% url 'admin:index' %}">Управление</a>
                 </nav>

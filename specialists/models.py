@@ -1,6 +1,6 @@
 import random
-import os
 
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -15,38 +15,27 @@ class Specialist(models.Model):
         return self.surname + ' ' + self.name + ' ' + self.patronymic
 
     def qualif(self, estims, ranks, maxQ):
-        print(estims, ranks, sep='\n')
         sum = 0
         for rank in ranks:
-            sum += float(ranks[rank]) * float(estims[rank])
+            if estims.get(str(rank)):
+                sum += float(ranks[rank]) * float(estims[str(rank)])
+        print(sum)
         return sum / maxQ
 
-    def setMarks(self):
-        dir = '/home/oxxxipoint/oxxxipoint.pythonanywhere.com/templates/estimations.txt'
-        file = open(dir, 'r')
-        marks = file.read()
-        file.close()
-        nums = [0, 0.25, 0.5, 0.75, 1]
-        estims = {}
-        for mark in marks.split('\n'):
-            if mark != '' and not mark.isspace():
-                estims[mark] = random.choice(nums)
-        return estims
-
-    def setRanks(self):
-        dir = '/home/oxxxipoint/oxxxipoint.pythonanywhere.com/templates/coefficients.txt'
-        file = open(dir, 'r')
-        file_text = file.read()
-        file.close()
-        ranks = {}
-        for line in file_text.split('\n'):
-            for word in line.split(' - '):
-                if '.' in word:
-                    ranks[line.split(' - ')[0]] = float(word)
-        return ranks
+    # def setMarks(self):
+    #     dir = 'templates/estimations.txt'
+    #     file = open(dir, 'r')
+    #     marks = file.read()
+    #     file.close()
+    #     nums = [0, 0.25, 0.5, 0.75, 1]
+    #     estims = {}
+    #     for mark in marks.split('\n'):
+    #         if mark != '' and not mark.isspace():
+    #             estims[mark] = random.choice(nums)
+    #     return estims
 
     def maxQualif(self, ranks):
-        return sum(ranks.values())
+        return float(sum(ranks))
 
     class Meta:
         verbose_name = 'Специалист'
@@ -89,10 +78,53 @@ class Dict(models.Model):
         verbose_name_plural = "Словари"
 
 
+class Criteria(models.Model):
+    criteria_name = models.CharField('Имя критерия', max_length=50, db_index=True, primary_key=True)
+    criteria_value = models.DecimalField('Вес критерия', max_digits=2, decimal_places=1,
+                                         validators=[MinValueValidator(0), MaxValueValidator(1)])
+
+    @classmethod
+    def create(cls, crit_name, crit_value):
+        criteria = cls(criteria_name=crit_name, criteria_value=crit_value)
+        return criteria
+
+    @classmethod
+    def setRanks(cls):
+        dir = 'templates/coefficients.txt'
+        file = open(dir, 'r')
+        file_text = file.read()
+        file.close()
+        ranks = {}
+        for line in file_text.split('\n'):
+            for word in line.split(' - '):
+                if '.' in word:
+                    ranks[line.split(' - ')[0]] = float(word)
+        return ranks
+
+    def __str__(self):
+        return self.criteria_name
+
+    class Meta:
+        verbose_name = "Критерий"
+        verbose_name_plural = "Критерии"
+
+
 class DictObj(models.Model):
+    zero = '0'
+    one = '0.25'
+    two = '0.5'
+    three = '0.75'
+    four = '1.0'
+
+    VALUES = [(zero, 0),
+              (one, 0.25),
+              (two, 0.5),
+              (three, 0.75),
+              (four, 1.0)]
+    criteria = models.OneToOneField(Criteria, on_delete=models.CASCADE)
     container = models.ForeignKey(Dict, db_index=True, on_delete=models.CASCADE)
-    key = models.CharField(max_length=240, db_index=True)
-    value = models.CharField(max_length=240, db_index=True)
+    key = models.CharField('Имя критерия', max_length=50, db_index=True)
+    value = models.CharField('Уровень владения', max_length=10, choices=VALUES, default=0)
 
     def __str__(self):
         return "Оценка " + self.key
@@ -100,3 +132,5 @@ class DictObj(models.Model):
     class Meta:
         verbose_name = "Оценка"
         verbose_name_plural = "Оценки"
+
+

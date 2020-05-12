@@ -2,8 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 
-from specialists.forms import SpecialistForm
-from specialists.models import Specialist, Dict, DictObj
+from specialists.forms import SpecialistForm, DictObjForm, CriteriaForm
+from specialists.models import Specialist, Dict, Criteria
 
 
 def index(request):
@@ -11,13 +11,42 @@ def index(request):
     return render(request, 'list.html', {'all_spec': all_spec})
 
 
+def show_criteria(request):
+    all_criteria = Criteria.objects.order_by('criteria_name')
+    if not all_criteria:
+        ranks = Criteria.setRanks()
+        for rank in ranks:
+            crit = Criteria(criteria_name=rank, criteria_value=ranks[rank])
+            crit.save()
+    all_criteria = Criteria.objects.order_by('criteria_name')
+    print(all_criteria)
+
+    return render(request, 'criteria.html', {'all_criteria': all_criteria})
+
+
+def new_criteria(request):
+    if request.method == "POST":
+        form = CriteriaForm(request.POST)
+        if form.is_valid():
+            crit = form.save(commit=False)
+            crit.save()
+            return redirect('specialists:show_criteria')
+    else:
+        form = CriteriaForm()
+
+    return render(request, 'new_criteria.html', {'form': form})
+
+
 def estimate(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
     my_dict = get_object_or_404(Dict, id=spec_id)
     estims = my_dict.items()
     main_value = 0
+    ranks = {}
+    for crit in Criteria.objects.all():
+        ranks[crit] = crit.criteria_value
     if estims:
-        main_value = spec.qualif(my_dict.getRealDict(), spec.setRanks(), spec.maxQualif(spec.setRanks()))
+        main_value = spec.qualif(my_dict.getRealDict(), ranks, spec.maxQualif(ranks.values()))
         main_value = round(main_value, 3)
         spec.main_estim = main_value
         spec.save()
@@ -54,16 +83,22 @@ def spec_edit(request, spec_id):
 
 def estim_edit(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
-    my_dict = Dict(id=spec.id, spec=spec, dictName=("Оценки " + spec.surname))
-    my_dict.save()
+    if not Dict.objects.get(id=spec.id):
+        my_dict = Dict(id=spec.id, spec=spec, dictName=("Оценки " + spec.surname))
+        my_dict.save()
 
-    if my_dict.__len__() == 12:
-        my_dict.clear()
-    estims = spec.setMarks()
-    for est in estims:
-        dict_obj = DictObj(container=my_dict, key=est, value=estims[est])
-        dict_obj.save()
-    return redirect('specialists:estimate', spec.id)
+    if request.method == "POST":
+        form = DictObjForm(request.POST)
+        if form.is_valid():
+            estim = form.save(commit=False)
+            estim.container = Dict.objects.get(id=spec.id)
+            estim.key = estim.criteria.criteria_name
+            estim.save()
+            return redirect('specialists:estim_edit', spec.id)
+    else:
+        form = DictObjForm()
+
+    return render(request, 'estim_edit.html', {'form': form})
 
 
 def spec_delete(request, spec_id):
