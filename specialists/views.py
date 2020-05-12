@@ -19,7 +19,6 @@ def show_criteria(request):
             crit = Criteria(criteria_name=rank, criteria_value=ranks[rank])
             crit.save()
     all_criteria = Criteria.objects.order_by('criteria_name')
-    print(all_criteria)
 
     return render(request, 'criteria.html', {'all_criteria': all_criteria})
 

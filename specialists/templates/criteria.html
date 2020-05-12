@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 
 {% block title %} Список критериев {% endblock %}
-
 {% block content %}
 
     <div class="intro">
         <div class="crit_list">
-            <h2>Список критериев</h2>
+            <h2 class="est__head">Список критериев</h2>
             {% if all_criteria %}
                 {% for criteria in all_criteria %}
-                    <h4>{{ criteria.criteria_name }} : {{ criteria.criteria_value }}</h4>
+                    <p class="criteria">{{ criteria.criteria_name }} : {{ criteria.criteria_value }}</p>
                 {% endfor %}
             {% else %}
                 <h2 class="noCrits"> Критериев не найдено </h2>
             {% endif %}
 
-            <a href="{% url 'specialists:new_criteria' %}" class="estim__btn">Добавить критерий</a>
+            <a href="{% url 'specialists:new_criteria' %}" class="save_btn">Добавить критерий</a>
         </div>
     </div>
+
 {% endblock %}
