@@ -1,3 +1,4 @@
+Git - 0.3
 Visual Studio - 0.5
 Eclipse - 0.4
 PyCharm - 0.5
@@ -8,5 +9,5 @@ Python - 1.0
 C# - 0.9
 Java - 0.9
 Perl - 0.8
-Java Script - 0.7
+JavaScript - 0.7
 C++ - 0.6

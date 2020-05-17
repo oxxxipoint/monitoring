@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="intro">
+        <div class="info__change">
+            {% block name %} {% endblock %}
+            <form id="testing" method="POST" class="spec-form">{% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="save_btn">Сохранить</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

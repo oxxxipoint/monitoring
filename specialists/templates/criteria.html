@@ -5,10 +5,14 @@
 
     <div class="intro">
         <div class="crit_list">
-            <h2 class="est__head">Список критериев</h2>
+            <div class="rates">
+                <h2 class="est__head">Список критериев</h2>
+                <a href="{% url 'specialists:set_default' %}" class="change__btn" style="position:relative; bottom: 12px">Добавить критерии по умолчанию</a>
+            </div>
             {% if all_criteria %}
                 {% for criteria in all_criteria %}
                     <p class="criteria">{{ criteria.criteria_name }} : {{ criteria.criteria_value }}</p>
+                    <a href="{% url 'specialists:delete_criteria' criteria.criteria_name %}" class="del__icon"></a>
                 {% endfor %}
             {% else %}
                 <h2 class="noCrits"> Критериев не найдено </h2>

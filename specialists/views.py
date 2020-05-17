@@ -3,7 +3,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 
 from specialists.forms import SpecialistForm, DictObjForm, CriteriaForm
-from specialists.models import Specialist, Dict, Criteria
+from specialists.models import Specialist, Dict, DictObj, Criteria
 
 
 def index(request):
@@ -12,12 +12,6 @@ def index(request):
 
 
 def show_criteria(request):
-    all_criteria = Criteria.objects.order_by('criteria_name')
-    if not all_criteria:
-        ranks = Criteria.setRanks()
-        for rank in ranks:
-            crit = Criteria(criteria_name=rank, criteria_value=ranks[rank])
-            crit.save()
     all_criteria = Criteria.objects.order_by('criteria_name')
 
     return render(request, 'criteria.html', {'all_criteria': all_criteria})
@@ -36,6 +30,25 @@ def new_criteria(request):
     return render(request, 'new_criteria.html', {'form': form})
 
 
+def delete_criteria(request, criteria_name):
+    criteria = get_object_or_404(Criteria, criteria_name=criteria_name)
+    criteria.delete()
+    return redirect('specialists:show_criteria')
+
+
+def set_default(request):
+    all_criteria = Criteria.objects.order_by('criteria_name')
+    ranks = Criteria.setRanks()
+    for rank in ranks:
+        try:
+            Criteria.objects.get(criteria_name=rank)
+        except Criteria.DoesNotExist:
+            crit = Criteria(criteria_name=rank, criteria_value=ranks[rank])
+            crit.save()
+
+    return render(request, 'criteria.html', {'all_criteria': all_criteria})
+
+
 def estimate(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
     my_dict = get_object_or_404(Dict, id=spec_id)
@@ -49,6 +62,7 @@ def estimate(request, spec_id):
         main_value = round(main_value, 3)
         spec.main_estim = main_value
         spec.save()
+    estims.sort()
     return render(request, 'estimate.html', {'spec': spec, 'estims': estims, 'main_value': main_value})
 
 
@@ -97,15 +111,16 @@ def estim_edit(request, spec_id):
     else:
         form = DictObjForm()
 
-    return render(request, 'estim_edit.html', {'form': form})
+    return render(request, 'estim_edit.html', {'form': form, 'spec': spec})
+
+
+def estim_delete(request, spec_id, estim_name):
+    estim = get_object_or_404(DictObj, container=get_object_or_404(Dict, id=spec_id), key=estim_name)
+    estim.delete()
+    return redirect('specialists:estimate', spec_id)
 
 
 def spec_delete(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
     spec.delete()
     return HttpResponseRedirect("/")
-
-
-def table(request):
-    all_spec = Specialist.objects.order_by('surname')
-    return render(request, 'table.html', {'all_spec': all_spec})

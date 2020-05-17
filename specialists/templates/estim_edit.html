@@ -2,4 +2,7 @@
 
 {% block title %} Изменение оценок {% endblock %}
 
-{% block name %} <h1 class="change__top">Изменить оценку</h1>{% endblock %}
+{% block name %}
+    <h1 class="change__top">Изменить оценку <a href="{% url 'specialists:estimate' spec.id %}" class="surname">{{ spec.surname }}</a>
+    </h1>{% endblock %}
+

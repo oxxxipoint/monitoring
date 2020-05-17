@@ -17,6 +17,7 @@
                 <h2 class="est__head">Оценки специалиста</h2>
                 {% for estim in estims %}
                     <p class="field">{{ estim.0 }}: {{ estim.1 }}</p>
+                    <a href="{% url 'specialists:estim_delete' spec.id estim.0 %}" class="del__icon"></a>
                 {% endfor %}
                 <h2 class="main__value">Общая оценка: {{ main_value }}</h2>
             {% else %}
