@@ -5,7 +5,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 
 from specialists.forms import SpecialistForm, DictObjForm, CriteriaForm
-from specialists.models import Specialist, Dict, DictObj, Criteria
+from specialists.models import Specialist, Dict, DictObj, Criteria, qualif, maxQualif
 
 
 def index(request):
@@ -60,7 +60,7 @@ def show_estimates(request, spec_id):
     for crit in Criteria.objects.all():
         ranks[crit] = crit.criteria_value
     if estims:
-        main_value = spec.qualif(my_dict.getRealDict(), ranks, spec.maxQualif(ranks.values()))
+        main_value = qualif(my_dict.getRealDict(), ranks, maxQualif(ranks.values()))
         main_value = round(main_value, 3)
         spec.main_estim = main_value
         spec.save()
@@ -134,8 +134,8 @@ def estim_edit(request, spec_id):
 
 
 def estim_delete(request, spec_id, estim_name):
-    estim = get_object_or_404(DictObj, container=get_object_or_404(Dict, id=spec_id), key=estim_name)
-    estim.delete()
+    estims = DictObj.objects.filter(key=estim_name, container=get_object_or_404(Dict, id=spec_id))
+    estims.delete()
     return redirect('specialists:estimate', spec_id)
 
 

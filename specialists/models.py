@@ -1,7 +1,17 @@
-import random
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+
+
+def qualif(estims, ranks, maxQ):
+    sum = 0
+    for rank in ranks:
+        if estims.get(str(rank)):
+            sum += float(ranks[rank]) * float(estims[str(rank)])
+    return sum / maxQ
+
+
+def maxQualif(ranks):
+    return float(sum(ranks))
 
 
 class Specialist(models.Model):
@@ -13,29 +23,6 @@ class Specialist(models.Model):
 
     def __str__(self):
         return self.surname + ' ' + self.name + ' ' + self.patronymic
-
-    def qualif(self, estims, ranks, maxQ):
-        sum = 0
-        for rank in ranks:
-            if estims.get(str(rank)):
-                sum += float(ranks[rank]) * float(estims[str(rank)])
-        print(sum)
-        return sum / maxQ
-
-    # def setMarks(self):
-    #     dir = 'templates/estimations.txt'
-    #     file = open(dir, 'r')
-    #     marks = file.read()
-    #     file.close()
-    #     nums = [0, 0.25, 0.5, 0.75, 1]
-    #     estims = {}
-    #     for mark in marks.split('\n'):
-    #         if mark != '' and not mark.isspace():
-    #             estims[mark] = random.choice(nums)
-    #     return estims
-
-    def maxQualif(self, ranks):
-        return float(sum(ranks))
 
     class Meta:
         verbose_name = 'Специалист'
@@ -83,14 +70,10 @@ class Criteria(models.Model):
     criteria_value = models.DecimalField('Вес критерия', max_digits=2, decimal_places=1,
                                          validators=[MinValueValidator(0), MaxValueValidator(1)])
 
-    @classmethod
-    def create(cls, crit_name, crit_value):
-        criteria = cls(criteria_name=crit_name, criteria_value=crit_value)
-        return criteria
 
     @classmethod
     def setRanks(cls):
-        dir = 'templates/coefficients.txt'
+        dir = 'coeff/coefficients.txt'
         file = open(dir, 'r')
         file_text = file.read()
         file.close()
@@ -132,5 +115,3 @@ class DictObj(models.Model):
     class Meta:
         verbose_name = "Оценка"
         verbose_name_plural = "Оценки"
-
-
