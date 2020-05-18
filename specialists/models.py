@@ -121,7 +121,7 @@ class DictObj(models.Model):
               (two, 0.5),
               (three, 0.75),
               (four, 1.0)]
-    criteria = models.OneToOneField(Criteria, on_delete=models.CASCADE, verbose_name='Критерий')
+    criteria = models.ForeignKey(Criteria, on_delete=models.CASCADE, verbose_name='Критерий')
     container = models.ForeignKey(Dict, db_index=True, on_delete=models.CASCADE)
     key = models.CharField('Имя критерия', max_length=50, db_index=True)
     value = models.CharField('Уровень владения', max_length=10, choices=VALUES, default=0)

@@ -3,6 +3,9 @@
 {% block title %} Изменение оценок {% endblock %}
 
 {% block name %}
-    <h1 class="change__top">Изменить оценку <a href="{% url 'specialists:estimate' spec.id %}" class="surname">{{ spec.surname }}</a>
-    </h1>{% endblock %}
+    <h1 class="change__top">Изменить оценку <a href="{% url 'specialists:estimate' spec.id %}"
+                                               class="surname">{{ spec.surname }}</a>
+    </h1>
+    <a href="{% url 'specialists:set_random' spec.id %}" class="random__btn">Случайные оценки</a>
+{% endblock %}
 

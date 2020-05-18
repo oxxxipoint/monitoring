@@ -1,3 +1,5 @@
+import random
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
@@ -49,7 +51,7 @@ def set_default(request):
     return render(request, 'criteria.html', {'all_criteria': all_criteria})
 
 
-def estimate(request, spec_id):
+def show_estimates(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
     my_dict = get_object_or_404(Dict, id=spec_id)
     estims = my_dict.items()
@@ -64,6 +66,21 @@ def estimate(request, spec_id):
         spec.save()
     estims.sort()
     return render(request, 'estimate.html', {'spec': spec, 'estims': estims, 'main_value': main_value})
+
+
+def set_random(request, spec_id):
+    all_criteria = Criteria.objects.order_by('criteria_value')
+    rates = [0, 0.25, 0.5, 0.75, 1]
+    for criteria in all_criteria:
+        try:
+            DictObj.objects.get(container=get_object_or_404(Dict, id=spec_id), key=criteria.criteria_name)
+        except DictObj.DoesNotExist:
+            estim = DictObj(container=get_object_or_404(Dict, id=spec_id),
+                            criteria_id=criteria.criteria_name,
+                            key=criteria.criteria_name,
+                            value=random.choice(rates))
+            estim.save()
+    return show_estimates(request, spec_id)
 
 
 def spec_new(request):
@@ -96,7 +113,9 @@ def spec_edit(request, spec_id):
 
 def estim_edit(request, spec_id):
     spec = get_object_or_404(Specialist, id=spec_id)
-    if not Dict.objects.get(id=spec.id):
+    try:
+        Dict.objects.get(id=spec.id)
+    except Dict.DoesNotExist:
         my_dict = Dict(id=spec.id, spec=spec, dictName=("Оценки " + spec.surname))
         my_dict.save()
 
